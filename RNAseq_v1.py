@@ -5,6 +5,7 @@ import os,sys
 from optparse import OptionParser
 
 ##python 2.7版本支持
+# for python 3.6 
 parser = OptionParser(usage="%prog [options] Samples_List Configure")
 
 parser.add_option("-t", "--timeout",
