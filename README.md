@@ -1,9 +1,7 @@
 ### RNA-Seq-snakemake
 The repository is a convenient snakemake pipeline for RNA-Seq analysis.
 workflow of the pipeline
-<div style="width: 60%; height: 60%">
-  ![workflow](./dag.svg)
-</div>
+<img src="./dag.svg" width=50% height=50%>
 
 #### Step 1: config.yaml
 
