@@ -40,5 +40,9 @@ USED_GTF: "/path/GTF/ath.gtf"
 
 
 #### Step 2: snakemake
+Define an edited snakemake
 
 #### Step 3: execute
+```bash
+nohup snakemake --snakefile Snakefile --configfile config.yaml --cores 50 --latency-wait 100 &
+```
