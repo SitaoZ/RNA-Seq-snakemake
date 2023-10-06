@@ -5,7 +5,7 @@ workflow of the pipeline
 <img src="./dag.svg" width=80% height=80%>
 
 #### Step 1: config.yaml
-First, he config.yaml should be edited. If you don't know YAML ,the link is useful[yaml](https://www.cloudbees.com/blog/yaml-tutorial-everything-you-need-get-started).
+First, he config.yaml should be edited. If you don't know YAML ,the link is useful ([yaml](https://www.cloudbees.com/blog/yaml-tutorial-everything-you-need-get-started)).
 
 ```bash
 cat config.yaml
@@ -36,7 +36,7 @@ software:
   samtools: /home/zhusitao/anaconda3/bin/samtools
   Rscript: /home/zhusitao/anaconda3/envs/R/bin/Rscript
 
-USED_GTF: "/path/GTF/ath.gtf"
+USED_GTF: /path/GTF/ath.gtf
 ```
 
 
