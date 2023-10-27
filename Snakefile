@@ -1,17 +1,27 @@
 configfile: "config.yaml"
-workdir: "/data/zhusitao/project/04.learning/snakemake/02.RNA-Seq"
 
-SAMPLE = ['SR-NC-1', 'SR-NC-2', 'SR-OE-1', 'SR-OE-2']
+WORKDIR = config["workdir"]
+
+# samples
+FILES = config["samples"]
+SAMPLE = FILES.keys()
 READ = [1, 2]
 
+# database
+REF_BOWTIE_INDEX = config["ref_bowtie_index"]
+rRNA_DATABASE = config["rRNA_databases"]
 USED_GTF = config["USED_GTF"]
 
+# comparison format string for difference gene expression
 Ctrl = config['diff_group']['Control']
 Treat = config['diff_group']['Treat']
+GROUP = "Ctrl:" + ",".join(Ctrl) + "&" + "Treat:" + ",".join(Treat)
 
+# adapter
 ADAPTER_FORWARD = config['adapter']['forward']
 ADAPTER_BACKWARD = config['adapter']['backward']
 
+# software
 CUTADAPT = config['software']['cutadapt']
 BOWTIE2 = config['software']['bowtie2']
 SAMTOOLS = config['software']['samtools']
@@ -27,6 +37,19 @@ rule all:
 
 def get_fastqc_input_fastqs(wildcards):
     return config["samples"][wildcards.sample]
+
+rule prepare_fq:
+    input:
+        fq1 = lambda wildcards: FILES[wildcards.sample].split(",")[0],
+        fq2 = lambda wildcards: FILES[wildcards.sample].split(",")[1]
+    output:
+        fq1 = "data/samples/{sample}/{sample}_1.fq.gz",
+        fq2 = "data/samples/{sample}/{sample}_2.fq.gz"
+    log:
+        stdout="logs/prepare_fq.{sample}.stdout",
+        stderr="logs/prepare_fq.{sample}.stderr"
+    shell:
+        "if [ ! -d data/samples ]; then mkdir -p data/samples;fi; ln -s {input.fq1} {output.fq1}; ln -s {input.fq2} {output.fq2};"
 
 rule fastqc:
     input:
@@ -97,10 +120,10 @@ rule sortmerna:
         readb = "03.sortmerna/{sample}/readb"
     shell:
         "sortmerna {params.fixed} --threads {threads} --workdir {params.workdir} \
-         --ref /home/zhusitao/software/sortmerna/data/rRNA_databases/silva-euk-18s-id95.fasta \
-         --ref /home/zhusitao/software/sortmerna/data/rRNA_databases/silva-euk-28s-id98.fasta \
-         --ref /home/zhusitao/software/sortmerna/data/rRNA_databases/rfam-5.8s-database-id98.fasta \
-         --ref /home/zhusitao/software/sortmerna/data/rRNA_databases/rfam-5s-database-id98.fasta \
+         --ref {rRNA_DATABASE['silva-euk-18s']} \
+         --ref {rRNA_DATABASE['silva-euk-28s']} \
+         --ref {rRNA_DATABASE['rfam-5.8s']} \
+         --ref {rRNA_DATABASE['rfam-5s']} \
          --reads {input.r1} --reads {input.r2} --aligned {params.aligned} --other {params.other} -v > {log.stdout} 2>{log.stderr};"
          "rm -rf {params.idx} {params.kvdb} {params.readb}"
 
@@ -124,7 +147,7 @@ rule bowtie2:
         "-q --phred33 --sensitive --dpad 0 --gbar 99999999 --mp 1,1 --np 1 \
          --score-min L,0,-0.1 -I 1 -X 1000 --no-mixed --no-discordant -k 200"
     shell:
-        "{BOWTIE2} {params} -p {threads} -x /home/zhusitao/database/plant/ath/tair10/RSEM/tair10_rsem \
+        "{BOWTIE2} {params} -p {threads} -x {REF_BOWTIE_INDEX} \
          -1 {input.r1} -2 {input.r2} 2>{log.stderr} | {SAMTOOLS} view -b -o {output} -"
 
 rule rsem:
@@ -144,7 +167,7 @@ rule rsem:
                                --alignments \
                                -p {threads} \
                                {input} \
-                               /home/zhusitao/database/plant/ath/tair10/RSEM/tair10_rsem \
+                               {REF_BOWTIE_INDEX} \
                                05.rsem/{wildcards.sample}/{wildcards.sample} > {log.stdout} 2>{log.stderr}"
 
 rule gene_exp:
@@ -169,9 +192,9 @@ rule diff_exp:
         "07.diffgene/diffgene/Ctrl-vs-Treat_DESeq2.diffexp.xls",
         "07.diffgene/diffgene/Ctrl-vs-Treat_DESeq2.diffexp.filter.xls"
     params:
-        group="Ctrl:SR-NC-1,SR-NC-2&Treat:SR-OE-1,SR-OE-2"
+        group={GROUP}
     shell:
-        "python scripts/deseq2.py -i 06.genexp -d '{params.group}' -l 1 -p 0.05 -o 07.diffgene/diffgene"
+        "python scripts/deseq2.py -i 06.genexp -d '{params.group}' -l 1 -p 0.05 -w {WORKDIR} -o 07.diffgene/diffgene "
 
 rule diff_stat:
     input:
