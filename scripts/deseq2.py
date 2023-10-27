@@ -8,43 +8,39 @@ from optparse import OptionParser
 
 
 def main():
-	"""
-	%prog [options]
-	:return:
-	"""
-	parser =OptionParser()
-	parser.add_option('-i','--indir',help="the expression input dir")
-	parser.add_option('-d','--diffList',help="the diff compare list")
-	parser.add_option('-l','--log2',help="log2 for expression")
-	parser.add_option('-p','--padj',help="padj")
-	parser.add_option('-w','--workdir',help="working directory")
-	parser.add_option('-o','--outdir',help="output dir")
-
-
-	opts,args = parser.parse_args()
-
-
-	if opts.log2 == None:
-		opts.log2 = 1
-	if opts.padj == None:
-		opts.padj = 0.1
+    """
+    %prog [options]
+    :return:
+    """
+    parser =OptionParser()
+    parser.add_option('-i','--indir',help="the expression input dir")
+    parser.add_option('-d','--diffList',help="the diff compare list")
+    parser.add_option('-l','--log2',help="log2 for expression")
+    parser.add_option('-p','--padj',help="padj")
+    parser.add_option('-w','--workdir',help="working directory")
+    parser.add_option('-o','--outdir',help="output dir")
+    opts,args = parser.parse_args()
+    if opts.log2 == None:
+        opts.log2 = 1
+    if opts.padj == None:
+        opts.padj = 0.1
     if opts.workdir == None:
         print('\033[0;31;40m%s\033[0m' % "Warning: workdir must be given\n")
         sys.exit(parser.print_help())
-	if opts.outdir == None:
-		opts.outdir = os.getcwd()
-	if opts.indir == None or opts.diffList == None:
-		print('\033[0;31;40m%s\033[0m' % "Warning: indir must be given\n")
-		sys.exit(parser.print_help())
-	indir = opts.indir
-	diffList = opts.diffList
-	log2 = float(opts.log2)
-	padj = float(opts.padj)
+    if opts.outdir == None:
+    	opts.outdir = os.getcwd()
+    if opts.indir == None or opts.diffList == None:
+    	print('\033[0;31;40m%s\033[0m' % "Warning: indir must be given\n")
+    	sys.exit(parser.print_help())
+    indir = opts.indir
+    diffList = opts.diffList
+    log2 = float(opts.log2)
+    padj = float(opts.padj)
     workdir = opts.workdir
-	outdir = opts.outdir
-	DESeq2(indir,diffList,log2,padj,outdir)
+    outdir = opts.outdir
+    DESeq2(indir,diffList,log2,padj,workdir,outdir)
 
-def DESeq2(indir,diffList,log2,padj,outdir):
+def DESeq2(indir,diffList,log2,padj,workdir,outdir):
     if not os.path.exists(outdir):
         os.makedirs(outdir)
     #format reads count DESeq.xls
