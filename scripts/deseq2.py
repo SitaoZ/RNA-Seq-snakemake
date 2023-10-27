@@ -17,6 +17,7 @@ def main():
 	parser.add_option('-d','--diffList',help="the diff compare list")
 	parser.add_option('-l','--log2',help="log2 for expression")
 	parser.add_option('-p','--padj',help="padj")
+	parser.add_option('-w','--workdir',help="working directory")
 	parser.add_option('-o','--outdir',help="output dir")
 
 
@@ -27,6 +28,9 @@ def main():
 		opts.log2 = 1
 	if opts.padj == None:
 		opts.padj = 0.1
+    if opts.workdir == None:
+        print('\033[0;31;40m%s\033[0m' % "Warning: workdir must be given\n")
+        sys.exit(parser.print_help())
 	if opts.outdir == None:
 		opts.outdir = os.getcwd()
 	if opts.indir == None or opts.diffList == None:
@@ -36,6 +40,7 @@ def main():
 	diffList = opts.diffList
 	log2 = float(opts.log2)
 	padj = float(opts.padj)
+    workdir = opts.workdir
 	outdir = opts.outdir
 	DESeq2(indir,diffList,log2,padj,outdir)
 
@@ -182,8 +187,8 @@ write.table(sizefactor, file=\"{outdir}/tmp.output_b\", quote=FALSE, sep=\"\\t\"
         OUT.close()
         # execute the linux command
         # stdout=subprocess.PIPE,stderr=subprocess.STDOUT
-        os.chdir('/data/zhusitao/project/04.learning/snakemake/02.RNA-Seq')
-        cmd = '/home/zhusitao/anaconda3/envs/R/bin/Rscript {outdir}/{gan}-vs-{gbn}.DESeq.R > {outdir}/{gan}-vs-{gbn}.log 2>&1'.format(outdir=outdir,gan=gan,gbn=gbn)
+        os.chdir(f'{workdir}')
+        cmd = 'Rscript {outdir}/{gan}-vs-{gbn}.DESeq.R > {outdir}/{gan}-vs-{gbn}.log 2>&1'.format(outdir=outdir,gan=gan,gbn=gbn)
         p = subprocess.run(cmd, shell=True, check=True, timeout=100)
         # execute successed
         if p.returncode == 0:
