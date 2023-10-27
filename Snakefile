@@ -10,6 +10,11 @@ READ = [1, 2]
 # database
 REF_BOWTIE_INDEX = config["ref_bowtie_index"]
 rRNA_DATABASE = config["rRNA_databases"]
+silva_euk_18s = rRNA_DATABASE['silva-euk-18s']
+silva_euk_28s = rRNA_DATABASE['silva-euk-28s']
+rfam_5_8s = rRNA_DATABASE['rfam-5.8s']
+rfam_5s = rRNA_DATABASE['rfam-5s']
+
 USED_GTF = config["USED_GTF"]
 
 # comparison format string for difference gene expression
@@ -120,10 +125,10 @@ rule sortmerna:
         readb = "03.sortmerna/{sample}/readb"
     shell:
         "sortmerna {params.fixed} --threads {threads} --workdir {params.workdir} \
-         --ref {rRNA_DATABASE['silva-euk-18s']} \
-         --ref {rRNA_DATABASE['silva-euk-28s']} \
-         --ref {rRNA_DATABASE['rfam-5.8s']} \
-         --ref {rRNA_DATABASE['rfam-5s']} \
+         --ref {silva_euk_18s} \
+         --ref {silva_euk_28s} \
+         --ref {rfam_5_8s} \
+         --ref {rfam_5s} \
          --reads {input.r1} --reads {input.r2} --aligned {params.aligned} --other {params.other} -v > {log.stdout} 2>{log.stderr};"
          "rm -rf {params.idx} {params.kvdb} {params.readb}"
 
