@@ -1,8 +1,11 @@
+workdir:
+  /data/zhusitao/project/04.learning/snakemake/02.RNA-Seq
+
 samples:
-  SR-NC-1: data/samples/SR-NC-1/SR-NC-1_1.fq.gz,data/samples/SR-NC-1/SR-NC-1_2.fq.gz
-  SR-NC-2: data/samples/SR-NC-2/SR-NC-2_1.fq.gz,data/samples/SR-NC-2/SR-NC-2_2.fq.gz
-  SR-OE-1: data/samples/SR-OE-1/SR-OE-1_1.fq.gz,data/samples/SR-OE-1/SR-OE-1_2.fq.gz
-  SR-OE-2: data/samples/SR-OE-2/SR-OE-2_1.fq.gz,data/samples/SR-OE-2/SR-OE-2_2.fq.gz
+  SR-NC-1: /data/zhusitao/project/04.learning/snakemake/02.RNA-Seq/a/SR-NC-1/SR-NC-1_1.fq.gz,/data/zhusitao/project/04.learning/snakemake/02.RNA-Seq/a/SR-NC-1/SR-NC-1_2.fq.gz
+  SR-NC-2: /data/zhusitao/project/04.learning/snakemake/02.RNA-Seq/a/SR-NC-2/SR-NC-2_1.fq.gz,/data/zhusitao/project/04.learning/snakemake/02.RNA-Seq/a/SR-NC-2/SR-NC-2_2.fq.gz
+  SR-OE-1: /data/zhusitao/project/04.learning/snakemake/02.RNA-Seq/a/SR-OE-1/SR-OE-1_1.fq.gz,/data/zhusitao/project/04.learning/snakemake/02.RNA-Seq/a/SR-OE-1/SR-OE-1_2.fq.gz
+  SR-OE-2: /data/zhusitao/project/04.learning/snakemake/02.RNA-Seq/a/SR-OE-2/SR-OE-2_1.fq.gz,/data/zhusitao/project/04.learning/snakemake/02.RNA-Seq/a/SR-OE-2/SR-OE-2_2.fq.gz
 
 
 diff_group:
@@ -25,4 +28,13 @@ software:
   samtools: /home/zhusitao/anaconda3/bin/samtools
   Rscript: /home/zhusitao/anaconda3/envs/R/bin/Rscript
 
-USED_GTF: "/path/GTF/ath.gtf"
+ref_bowtie_index:
+  /home/zhusitao/database/plant/ath/tair10/RSEM/tair10_rsem
+
+rRNA_databases:
+  silva-euk-18s: /home/zhusitao/software/sortmerna/data/rRNA_databases/silva-euk-18s-id95.fasta
+  silva-euk-28s: /home/zhusitao/software/sortmerna/data/rRNA_databases/silva-euk-28s-id98.fasta
+  rfam-5.8s: /home/zhusitao/software/sortmerna/data/rRNA_databases/rfam-5.8s-database-id98.fasta
+  rfam-5s: /home/zhusitao/software/sortmerna/data/rRNA_databases/rfam-5s-database-id98.fasta
+
+USED_GTF: /path/GTF/ath.gtf
