@@ -20,7 +20,9 @@ USED_GTF = config["USED_GTF"]
 # comparison format string for difference gene expression
 Ctrl = config['diff_group']['Control']
 Treat = config['diff_group']['Treat']
-GROUP = "Ctrl:" + ",".join(Ctrl) + "&" + "Treat:" + ",".join(Treat)
+print("Ctrl:", type(Ctrl))
+print("Treat:", Treat)
+GROUP = "Ctrl:" + ",".join(Ctrl.split(" ")) + "&" + "Treat:" + ",".join(Treat.split(" "))
 
 # adapter
 ADAPTER_FORWARD = config['adapter']['forward']
