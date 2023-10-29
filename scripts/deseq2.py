@@ -17,6 +17,7 @@ def main():
     parser.add_option('-d','--diffList',help="the diff compare list")
     parser.add_option('-l','--log2',help="log2 for expression")
     parser.add_option('-p','--padj',help="padj")
+    parser.add_option('-r','--rpath',help="Rscript path")
     parser.add_option('-w','--workdir',help="working directory")
     parser.add_option('-o','--outdir',help="output dir")
     opts,args = parser.parse_args()
@@ -24,6 +25,8 @@ def main():
         opts.log2 = 1
     if opts.padj == None:
         opts.padj = 0.1
+    if opts.rpath == None:
+        opts.rpath == 'Rscript'
     if opts.workdir == None:
         print('\033[0;31;40m%s\033[0m' % "Warning: workdir must be given\n")
         sys.exit(parser.print_help())
@@ -36,6 +39,7 @@ def main():
     diffList = opts.diffList
     log2 = float(opts.log2)
     padj = float(opts.padj)
+    Rscript = opts.rpath
     workdir = opts.workdir
     outdir = opts.outdir
     DESeq2(indir,diffList,log2,padj,workdir,outdir)
@@ -184,7 +188,8 @@ write.table(sizefactor, file=\"{outdir}/tmp.output_b\", quote=FALSE, sep=\"\\t\"
         # execute the linux command
         # stdout=subprocess.PIPE,stderr=subprocess.STDOUT
         os.chdir(f'{workdir}')
-        cmd = 'Rscript {outdir}/{gan}-vs-{gbn}.DESeq.R > {outdir}/{gan}-vs-{gbn}.log 2>&1'.format(outdir=outdir,gan=gan,gbn=gbn)
+        cmd = '{Rscript} {outdir}/{gan}-vs-{gbn}.DESeq.R > {outdir}/{gan}-vs-{gbn}.log 2>&1'.format(
+                Rscript=Rscript, outdir=outdir,gan=gan,gbn=gbn)
         p = subprocess.run(cmd, shell=True, check=True, timeout=100)
         # execute successed
         if p.returncode == 0:
