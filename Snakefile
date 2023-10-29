@@ -20,8 +20,6 @@ USED_GTF = config["USED_GTF"]
 # comparison format string for difference gene expression
 Ctrl = config['diff_group']['Control']
 Treat = config['diff_group']['Treat']
-print("Ctrl:", type(Ctrl))
-print("Treat:", Treat)
 GROUP = "Ctrl:" + ",".join(Ctrl.split(" ")) + "&" + "Treat:" + ",".join(Treat.split(" "))
 
 # adapter
@@ -201,7 +199,7 @@ rule diff_exp:
     params:
         group={GROUP}
     shell:
-        "python scripts/deseq2.py -i 06.genexp -d '{params.group}' -l 1 -p 0.05 -w {WORKDIR} -o 07.diffgene/diffgene "
+        "python scripts/deseq2.py -i 06.genexp -d '{params.group}' -l 1 -p 0.05 -w {WORKDIR} -r {RSCRIPT} -o 07.diffgene/diffgene "
 
 rule diff_stat:
     input:
