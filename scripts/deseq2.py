@@ -42,9 +42,9 @@ def main():
     Rscript = opts.rpath
     workdir = opts.workdir
     outdir = opts.outdir
-    DESeq2(indir,diffList,log2,padj,workdir,outdir)
+    DESeq2(indir,diffList,log2,padj,Rscript,workdir,outdir)
 
-def DESeq2(indir,diffList,log2,padj,workdir,outdir):
+def DESeq2(indir,diffList,log2,padj,Rscript,workdir,outdir):
     if not os.path.exists(outdir):
         os.makedirs(outdir)
     #format reads count DESeq.xls
